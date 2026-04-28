@@ -1,0 +1,105 @@
+<!-- =======================
+FILE 1: index.html
+======================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mayas Shop</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="{{ url_for('static', filename='products.js') }}"></script></head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo">🛍 Mayas Shop</div>
+
+<ul class="nav-links">
+   <li><a href="{{ url_for('home', user_id=user_id) }}">Home</a></li>
+        <li><a href="{{ url_for('products_page', user_id=user_id) }}">Products</a></li>
+        <li><a href="{{ url_for('categories_page', user_id=user_id) }}">Categories</a></li>
+        <li><a href="{{ url_for('contact_page', user_id=user_id) }}">Contact</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+</ul>
+
+    <form method="GET" action="/">
+        <button class="logout-btn">Logout</button>
+    </form>
+</nav>
+
+<!-- Hero -->
+<section class="hero" >
+
+    <div class="hero-left">
+        <!-- <h1>Men Fashion</h1>
+        <p>Best recommendations for you</p> -->
+
+<br><br><br><br>
+        <a href="{{ url_for('products_page', user_id=user_id) }}" class="btn">
+            Shop Now
+        </a>
+    </div>
+
+    <div class="hero-right">
+        <!-- <img src="{{ url_for('static', filename='images/hero.png') }}" alt="hero"> -->
+    </div>
+
+</section>
+
+<!-- Categories -->
+<h2 class="section-title">CATEGORIES</h2>
+
+<div class="categories">
+    <div class="cat">Clothes</div>
+    <div class="cat">Electronics</div>
+    <div class="cat">Sports</div>
+    <div class="cat">Home</div>
+    <div class="cat">Perfumes</div>
+    <div class="cat">Toys</div>
+    <div class="cat">Books</div>
+</div>
+
+<!-- Products -->
+<h2 class="section-title">🔥 FOR YOU (AI Recommendations)</h2>
+
+<div class="grid">
+
+{% for item in recommendations %}
+
+<div class="card">
+
+<img src="{{ url_for('static', filename=item.image) }}" alt="product">
+    <div class="card-body">
+
+        <h3>{{ item.category }}</h3>
+
+        <p>ID: {{ item.product_id }}</p>
+
+        <p class="price">${{ item.price }}</p>
+
+        {% if item.rating %}
+        <p>⭐ {{ item.rating }}</p>
+        {% endif %}
+
+        <button class="btn small">Add to Cart</button>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <p>© 2026 Mayas Shop</p>
+        <p>AI Recommendation System</p>
+    </div>
+</footer>
+
+</body>
+</html>

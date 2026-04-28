@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact - Mayas Shop</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="{{ url_for('static', filename='products.js') }}"></script>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">🛍 Mayas Shop</div>
+  <ul class="nav-links">
+   <li><a href="{{ url_for('home', user_id=user_id) }}">Home</a></li>
+        <li><a href="{{ url_for('products_page', user_id=user_id) }}">Products</a></li>
+        <li><a href="{{ url_for('categories_page', user_id=user_id) }}">Categories</a></li>
+        <li><a href="{{ url_for('contact_page', user_id=user_id) }}">Contact</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+</ul>
+</nav>
+
+<h2 class="section-title">Contact Us</h2>
+
+<div class="contact-container">
+
+<form class="contact-form">
+    <input type="text" placeholder="Your Name" required>
+    <input type="email" placeholder="Your Email" required>
+    <textarea placeholder="Your Message"></textarea>
+    <button class="btn">Send Message</button>
+</form>
+
+</div>
+
+</body>
+</html>
