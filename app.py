@@ -3,20 +3,18 @@ import pandas as pd
 from ga import recommend_products
 
 app = Flask(__name__)
-app.secret_key = "secret123"  # 🔐 مهم لتفعيل session
+app.secret_key = "secret123"  # Required to enable session handling
 
-# =========================
-# تحميل البيانات
-# =========================
+#*************************************************
+# Load datasets
 users = pd.read_excel("data/users_clean.xlsx", engine="openpyxl")
 products = pd.read_excel("data/products_clean.xlsx", engine="openpyxl")
 ratings = pd.read_excel("data/ratings_clean.xlsx", engine="openpyxl")
 behavior = pd.read_excel("data/behavior_clean.xlsx", engine="openpyxl")
 
 
-# =========================
-# دالة إضافة الصور حسب الفئة
-# =========================
+#*************************************************
+# Function to assign images based on category
 def add_images(recommendations):
     category_images = {
         "Clothes": "images/clothes.jpg",
@@ -34,40 +32,40 @@ def add_images(recommendations):
     return recommendations
 
 
-# =========================
-# تسجيل الدخول
-# =========================
+#*************************************************
+# Login route
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         user_id = request.form["user_id"]
 
-        # تخزين في session
+        # Store user_id in session
         session["user_id"] = user_id
 
-        # تحويل مع إظهار user_id في الرابط
+        # Redirect to home page with user_id in URL
         return redirect(url_for("home", user_id=user_id))
 
     return render_template("login.html")
 
 
-# =========================
-# الصفحة الرئيسية
-# =========================
+#*************************************************
+# Home page
 @app.route("/home")
 def home():
 
+    # Check if user is logged in
     if "user_id" not in session:
         return redirect(url_for("login"))
 
     user_id = request.args.get("user_id") or session["user_id"]
     session["user_id"] = user_id
 
+    # Generate recommendations
     recommendations = recommend_products(
         int(user_id), users, products, ratings, behavior
     )
 
-    # إضافة الصور
+    # Add images to recommendations
     recommendations = add_images(recommendations)
 
     return render_template(
@@ -77,9 +75,8 @@ def home():
     )
 
 
-# =========================
-# المنتجات
-# =========================
+#*************************************************
+# Products page
 @app.route("/products")
 def products_page():
 
@@ -92,9 +89,8 @@ def products_page():
     return render_template("products.html", user_id=user_id)
 
 
-# =========================
-# الفئات
-# =========================
+#*************************************************
+# Categories page
 @app.route("/categories")
 def categories_page():
 
@@ -107,9 +103,8 @@ def categories_page():
     return render_template("categories.html", user_id=user_id)
 
 
-# =========================
-# التواصل
-# =========================
+#*************************************************
+# Contact page
 @app.route("/contact")
 def contact_page():
 
@@ -122,9 +117,8 @@ def contact_page():
     return render_template("contact.html", user_id=user_id)
 
 
-# =========================
-# Refresh (تحديث التوصيات)
-# =========================
+#*************************************************
+# Refresh recommendations
 @app.route("/refresh", methods=["POST"])
 def refresh():
 
@@ -133,11 +127,12 @@ def refresh():
 
     user_id = session["user_id"]
 
+    # Generate new recommendations
     recommendations = recommend_products(
         int(user_id), users, products, ratings, behavior
     )
 
-    # إضافة الصور
+    # Add images
     recommendations = add_images(recommendations)
 
     return render_template(
@@ -147,17 +142,15 @@ def refresh():
     )
 
 
-# =========================
-# تسجيل الخروج
-# =========================
+#*************************************************
+# Logout
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
 
 
-# =========================
-# تشغيل التطبيق
-# =========================
+#*************************************************
+# Run the application
 if __name__ == "__main__":
     app.run(debug=True)
